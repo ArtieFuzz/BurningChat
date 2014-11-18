@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Burning Chat</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body ng-controller="controller">
+
+<div class="row full-heigt" ng-init="showTime = true">
+    <div class="col-sm-9 full-height">
+        <div class="panel panel-default full-height">
+            <div class="panel-heading">
+                <!--
+                <div ng-repeat="channel in channels">
+                    <button type="button" class="btn btn-{{channel.color}}">
+                        {{channel.name}}
+                    </button>
+                </div>
+                -->
+            </div>
+            <div class="panel-body scroll">
+                <ul>
+                    <li ng-repeat="line in lines">
+                        <span ng-if="timestamp">
+                            [{{locale(line.time)}}]
+                        </span>
+                        <{{line.nick}}> {{line.msg}}
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-footer">
+                <form role="form" ng-submit="send()">
+                    <div class="form-group-sm">
+                        <div class="row">
+                            <div class="col-xs-10">
+                                <div class="input-group">
+                                   <span class="input-group-addon">
+                                      {{me.nick}} :
+                                   </span>
+                                    <input type="text" class="form-control" placeholder="Message" ng-model="me.text">
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+                                <button class="btn btn-primary" type="submit">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 full-height">
+        <div class="panel panel-default full-height">
+            <div class="panel-heading">
+                <input type="text" class="form-control" ng-model="me.nick" placeholder="Nickname">
+            </div>
+            <div class="panel-body scroll">
+                <ul>
+                    <li ng-repeat="user in users">
+                        <span ng-style="user.style">{{user.nick}}</span><br>
+                        {{user.text}}
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-footer">
+                <div class="input-group" ng-init="timestamp = 'hh:mm'">
+                    <span class="input-group-addon">Timestamp</span>
+                    <input type="text" class="form-control" ng-model="timestamp">
+                </div>
+                <!--
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" id="menu" aria-expanded="true">
+                        Menu
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="menu">
+
+                    </ul>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/angular.min.js"></script>
+<script src="/js/firebase.js"></script>
+<script src="/js/angularfire.min.js"></script>
+<script src="/js/moment+locale.min.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

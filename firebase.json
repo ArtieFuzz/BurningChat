@@ -1,0 +1,12 @@
+{
+  "firebase": "burningchat",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**",
+    "LICENSE",
+    "README.md",
+    "nodejs/*"
+  ]
+}
