@@ -1,17 +1,37 @@
-html, body, .full-height{
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
+.full-height{
+    height: calc(100vh - 4px);
 }
 .scroll{
     overflow-y: auto;
 }
-.pannel-heading{
-    height: 40px;
+.no-margin{
+    margin: 0;
 }
-.pannel-footer{
-    height: 60px;
+.no-padding{
+    padding: 0;
 }
-.pannel-body{
-    height: calc(100% - 100px);
+.panel-heading, .panel-footer{
+    height: 50px;
+}
+.body{
+    height: calc(100vh - 108px);
+}
+.match-parent{
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+}
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+li{
+    padding: 5px;
+}
+li:nth-child(odd) {
+    background: #eee;
 }
