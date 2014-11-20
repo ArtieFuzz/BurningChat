@@ -1,5 +1,14 @@
 [
     "Send",
     "Timestamp",
-    "Language"
+    "Language",
+    "Message",
+    "Chatting",
+    "Archive",
+    "Search",
+    "Log",
+    "Image",
+    "Joined here",
+    "Parted here",
+    "Show/Hide"
 ]

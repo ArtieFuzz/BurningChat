@@ -1,0 +1,24 @@
+{
+  "name": "burningchat",
+  "version": "1.0.0",
+  "description": "High temperature chatting space",
+  "main": "cleaner.js",
+  "dependencies": {
+    "firebase": "~2.0.4",
+    "moment": "~2.8.3",
+    "underscore": "~1.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BurningCrew/BurningChat.git"
+  },
+  "author": "HyeonuPark",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BurningCrew/BurningChat/issues"
+  }
+}

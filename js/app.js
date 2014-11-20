@@ -1,13 +1,10 @@
-var config = {
-    server : 'https://burningchat.firebaseio.com',
-    colors : [
-        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal'
-    ]
-};
+var colors = [
+    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal'
+];
 
-var app = angular.module('app', ['firebase', 'ngCookies', 'luegg.directives', 'burningForeignLanguage']);
+var app = angular.module('app', ['firebase', 'ngCookies', 'luegg.directives', 'burningForeignLanguage', 'burningChatRenderer']);
 
-app.value('firebase', new Firebase(config.server));
+app.value('firebaseRef', new Firebase('https://burningchat.firebaseio.com'));
 
 app.value('bflConfig', {
     baseUrl : '/bfl/',
@@ -18,19 +15,19 @@ app.value('bflConfig', {
     ]
 });
 
-app.controller('controller', function($scope, $firebase, $cookies, firebase, bflLanguage) {
+app.controller('controller', function($scope, $firebase, $cookies, firebaseRef, bflService) {
 
-    $scope.langs = bflLanguage.langs;
-    $scope.setLang = bflLanguage.setLang;
+    $scope.langs = bflService.langs;
+    $scope.setLang = bflService.setLang;
 
-    var $msgRef = $firebase(firebase.child('msg'));
-    var $userRef = $firebase(firebase.child('user'));
+    var $msgRef = $firebase(firebaseRef.child('message'));
+    var $userRef = $firebase(firebaseRef.child('user'));
 
     var me = {
         nick : $cookies.burningchat_nick || 'John Smith',
         text : '',
         style: {
-            color : $cookies.burningchat_color || config.colors[Math.floor(Math.random() * config.colors.length)]
+            color : colors[Math.floor(Math.random() * colors.length)]
         }
     };
     $scope.me = me;
@@ -48,10 +45,10 @@ app.controller('controller', function($scope, $firebase, $cookies, firebase, bfl
         });
     }
 
-    $scope.$watch('me', function() {
+    $scope.$watch('me.nick', function() {
+        if (!$scope.me.nick) return;
         $cookies.burningchat_nick = $scope.me.nick;
-        $cookies.burningchat_color = $scope.me.style.color;
-    }, true);
+    });
 
     $scope.lines = $msgRef.$asArray();
     $scope.users = $userRef.$asArray();
@@ -69,5 +66,25 @@ app.controller('controller', function($scope, $firebase, $cookies, firebase, bfl
 
     $scope.locale = function(time) {
         return moment.utc(time).local().format($scope.timestamp);
-    }
+    };
+
+    $scope.show = function(line) {
+        switch (line.type) {
+            case 'msg':
+            case 'link':
+            case 'img':
+                return true;
+            case 'log':
+                return $scope.log;
+            default:
+                return false;
+        }
+    };
+
+    $msgRef.$push({
+        type : 'log',
+        time : new Date().getTime(),
+        nick : $scope.me.nick,
+        msg : 'Joined here'
+    });
 });

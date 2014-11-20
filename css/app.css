@@ -10,6 +10,9 @@
 .no-padding{
     padding: 0;
 }
+.panel{
+    width: 100%;
+}
 .panel-heading, .panel-footer{
     height: 50px;
 }
@@ -18,11 +21,13 @@
 }
 .match-parent{
     height: 100%;
-    min-height: 100%;
-    max-height: 100%;
     width: 100%;
-    min-width: 100%;
-    max-width: 100%;
+}
+.log{
+    color: cyan;
+}
+.holder{
+    padding: 2px;
 }
 ul{
     list-style-type: none;
@@ -30,8 +35,12 @@ ul{
     padding: 0;
 }
 li{
-    padding: 5px;
+    padding: 3px;
 }
 li:nth-child(odd) {
     background: #eee;
+}
+img{
+    max-width: 100%;
+    height: auto;
 }
