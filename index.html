@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body ng-controller="controller">
+<body ng-controller="controller" ng-init="isChat = true">
 
 <div class="row no-margin" ng-init="showTime = true">
     <div class="col-sm-8 no-margin holder">
@@ -17,14 +17,14 @@
             <div class="panel-heading no-padding">
                 <div class="btn-group no-padding" role="group">
                     <div class="btn-group" role="group">
-                        <button id="language" class="btn btn-info btn-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="true" bfl-translate>Language<span class="carrot"></span></button>
+                        <button id="language" class="btn btn-info btn-sm btn-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="true" bfl-translate>Language<span class="carrot"></span></button>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="language">
                             <li ng-repeat="lang in langs">
                                 <a ng-click="setLang(lang)">{{lang}}</a>
                             </li>
                         </ul>
                     </div>
-                    <button class="btn btn-sm btn-success" type="button" onclick="location.href='/archive.html'" bfl-translate>Archive</button>
+                    <button class="btn btn-sm btn-success" type="button" ng-click="isChat = !isChat">{{translate(isChat ? 'Archive' : 'Chatting')}}</button>
                     <button class="btn btn-sm btn-info" type="button" ng-click="log = !log" bfl-translate>Log</button>
                     <div class="btn-group" role="group">
                         <button id="image" class="btn btn-sm btn-success" type="button" ng-click="img = !img" bfl-translate>Image<span class="carrot"></span></button>
@@ -43,7 +43,7 @@
                 </ul>
             </div>
             <div class="panel-footer">
-                <form role="form" ng-submit="send()">
+                <form role="form" ng-submit="submit()">
                     <div class="form-group-sm">
                         <div class="row">
                             <div class="col-xs-10">
@@ -70,9 +70,9 @@
             </div>
             <div class="panel-body body scroll no-padding">
                 <ul>
-                    <li ng-repeat="user in users">
-                        <span ng-style="user.style">{{user.nick || 'John Smith'}}</span><br>
-                        {{user.text}}
+                    <li ng-repeat="elem in elems | orderBy:-elem.time" ng-click="elemClick(elem)">
+                        <span ng-style="elem.style">{{isChat ? (elem.nick || 'John Smith') : locale(elem.time)}}</span><br>
+                        {{elem.text}}
                     </li>
                 </ul>
             </div>

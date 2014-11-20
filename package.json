@@ -1,6 +1,6 @@
 {
   "name": "burningchat",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "High temperature chatting space",
   "main": "cleaner.js",
   "dependencies": {
@@ -9,9 +9,6 @@
     "underscore": "~1.7.0"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": ""
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/BurningCrew/BurningChat.git"

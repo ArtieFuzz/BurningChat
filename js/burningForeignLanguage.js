@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('burningForeignLanguage', [])
-        .factory('bflService', function($http, bflConfig) {
+        .factory('$bfl', function($http, bflConfig) {
             var result = {
                 langs : bflConfig.langs,
                 defaultLang : bflConfig.defaultLang,
@@ -35,39 +35,47 @@
             };
             return result;
         })
-        .directive('bflTranslate', function(bflService) {
+        .factory('$translate', function($bfl) {
+            return function translate(target) {
+                return $bfl.dictionary[$bfl.defaultDict.indexOf(target)];
+            }
+        })
+        .directive('bflTranslate', function($bfl) {
             return {
                 link : function(scope, element, attrs) {
                     scope.$watch(function() {
-                        return bflService.dictionary
+                        return $bfl.dictionary
                     }, function(dictionary) {
                         element.text(
-                            dictionary[bflService.prvDict.indexOf(element.text())] ||
-                            bflService.defaultDict[bflService.prvDict.indexOf(element.text())] ||
+                            dictionary[$bfl.prvDict.indexOf(element.text())] ||
+                            $bfl.defaultDict[$bfl.prvDict.indexOf(element.text())] ||
                             element.text()
                         );
                     }, true);
                 }
             }
         })
-        .directive('bflInit', function(bflService) {
+        .directive('bflInit', function($bfl) {
             return {
                 link : function(scope, element, attrs) {
-                    var target = attrs.bflInit;
-                    scope[target] = target;
-                    scope.$watch(function() {
-                        return bflService.dictionary
-                    }, function(dictionary) {
-                        scope[target] = dictionary[bflService.defaultDict.indexOf(target)] ||
-                        target;
-                    }, true);
+                    var targets = attrs.bflInit.split(' ');
+                    angular.forEach(targets, function each(target) {
+                        scope[target] = target;
+                        scope.$watch(function() {
+                            return $bfl.dictionary
+                        }, function(dictionary) {
+                            scope[target] = dictionary[$bfl.defaultDict.indexOf(target)] ||
+                                            target;
+                        }, true);
+                    });
+
                 }
             }
         })
-        .directive('bflLanguage', function(bflService) {
+        .directive('bflLanguage', function($bfl) {
             return {
                 link : function(scope, element, attrs) {
-                    bflService.setLang(attrs.bflLanguage);
+                    $bfl.setLang(attrs.bflLanguage);
                 }
             }
         });

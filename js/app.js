@@ -15,10 +15,14 @@ app.value('bflConfig', {
     ]
 });
 
-app.controller('controller', function($scope, $firebase, $cookies, firebaseRef, bflService) {
+app.controller('controller', function($scope, $http, $firebase, $cookies, firebaseRef, $bfl, $translate) {
 
-    $scope.langs = bflService.langs;
-    $scope.setLang = bflService.setLang;
+    $scope.langs = $bfl.langs;
+    $scope.setLang = $bfl.setLang;
+
+    $scope.translate = $translate;
+
+    $scope.timestamp = $cookies.burningchat_timestamp || 'hh:mm';
 
     var $msgRef = $firebase(firebaseRef.child('message'));
     var $userRef = $firebase(firebaseRef.child('user'));
@@ -45,24 +49,14 @@ app.controller('controller', function($scope, $firebase, $cookies, firebaseRef, 
         });
     }
 
-    $scope.$watch('me.nick', function() {
-        if (!$scope.me.nick) return;
-        $cookies.burningchat_nick = $scope.me.nick;
+    $scope.$watch('me.nick', function(nick) {
+        if (!nick) return;
+        $cookies.burningchat_nick = nick;
     });
 
-    $scope.lines = $msgRef.$asArray();
-    $scope.users = $userRef.$asArray();
-
-    $scope.send = function() {
-        if (!$scope.me.text) return;
-        $msgRef.$push({
-            type : 'msg',
-            time : new Date().getTime(),
-            nick : $scope.me.nick,
-            msg : $scope.me.text
-        });
-        $scope.me.text = '';
-    };
+    $scope.$watch('timestamp', function(timestamp) {
+        $cookies.burningchat_timestamp = timestamp;
+    });
 
     $scope.locale = function(time) {
         return moment.utc(time).local().format($scope.timestamp);
@@ -80,6 +74,54 @@ app.controller('controller', function($scope, $firebase, $cookies, firebaseRef, 
                 return false;
         }
     };
+
+    var chat = {};
+    var archive = {};
+
+    chat.lines = $msgRef.$asArray();
+    chat.elems = $userRef.$asArray();
+
+    chat.submit = function() {
+        if (!$scope.me.text) return;
+        $msgRef.$push({
+            type : 'msg',
+            time : new Date().getTime(),
+            nick : $scope.me.nick,
+            msg : $scope.me.text
+        });
+        $scope.me.text = '';
+    };
+
+    chat.elemClick = function(elem) {
+
+    }
+
+    archive.lines = [];
+    archive.elems = $firebase(firebaseRef.child('archive')).$asArray();
+
+    archive.submit = function() {
+
+    }
+
+    archive.elemClick = function(elem) {
+        $http.get('/archive/' + elem.name).success(function(data) {
+            $scope.lines = data;
+        })
+    }
+
+    $scope.$watch('isChat', function(isChat) {
+        if (isChat) {
+            $scope.lines = chat.lines;
+            $scope.elems = chat.elems;
+            $scope.submit = chat.submit;
+            $scope.elemClick = chat.elemClick;
+        } else {
+            $scope.lines = archive.lines;
+            $scope.elems = archive.elems;
+            $scope.submit = archive.submit;
+            $scope.elemClick = archive.elemClick;
+        }
+    });
 
     $msgRef.$push({
         type : 'log',
