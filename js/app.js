@@ -2,9 +2,9 @@ var colors = [
     'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal'
 ];
 
-var app = angular.module('app', ['firebase', 'ngCookies', 'luegg.directives', 'burningForeignLanguage', 'burningChatRenderer']);
+var app = angular.module('app', ['firebase', 'ngCookies', 'luegg.directives', 'ngImgur', 'burningForeignLanguage', 'burningChatRenderer']);
 
-app.value('firebaseRef', new Firebase('https://burningchat.firebaseio.com'));
+app.value('firebaseRef', new Firebase('https://citizenchat.firebaseio.com'));
 
 app.value('bflConfig', {
     baseUrl : '/bfl/',
@@ -15,7 +15,9 @@ app.value('bflConfig', {
     ]
 });
 
-app.controller('controller', function($scope, $http, $firebase, $cookies, firebaseRef, $bfl, $translate) {
+app.controller('controller', function($scope, $http, $firebase, $cookies, imgur, firebaseRef, $bfl, $translate) {
+
+    imgur.setAPIKey('Client-ID 77ced1743b47ed0')
 
     $scope.langs = $bfl.langs;
     $scope.setLang = $bfl.setLang;
@@ -83,11 +85,19 @@ app.controller('controller', function($scope, $http, $firebase, $cookies, fireba
 
     chat.submit = function() {
         if (!$scope.me.text) return;
+        var type;
+        var msg = $scope.me.text;
+        if (msg.slice(0, 4) === 'http') {
+            //var footer = msg.slice(-4, 0);
+            type = 'link';
+        } else {
+            type = 'msg';
+        }
         $msgRef.$push({
-            type : 'msg',
+            type : type,
             time : new Date().getTime(),
             nick : $scope.me.nick,
-            msg : $scope.me.text
+            msg : msg
         });
         $scope.me.text = '';
     };
@@ -121,6 +131,19 @@ app.controller('controller', function($scope, $http, $firebase, $cookies, fireba
             $scope.submit = archive.submit;
             $scope.elemClick = archive.elemClick;
         }
+    });
+
+    angular.element(document.getElementById('imgUpload')).on('change', function(e) {
+        var file = e.target.files[0];
+        imgur.upload(file).then(function(model) {
+            $msgRef.$push({
+                type : 'img',
+                time : new Date().getTime(),
+                nick : $scope.me.nick,
+                msg : model.link,
+                name : file.name
+            });
+        });
     });
 
     $msgRef.$push({

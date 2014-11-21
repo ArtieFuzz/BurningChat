@@ -8,8 +8,8 @@
 
             var template = {};
             template.msg = prefix + '{{line.msg}}';
-            template.link = prefix + '<a href="{{line.msg}}"></a>';
-            template.img = prefix + '{{line.name}}<br><img ng-if="img" src="{{line.msg}}"><a href="{{line.msg}}"></a></img><a ng-if="!img" href="{{line.msg}}">';
+            template.link = prefix + '<a href="{{line.msg}}">Click me!</a>';
+            template.img = prefix + '<span ng-if="img">{{line.name}}<br></span><img ng-if="img" src="{{line.msg}}"><a ng-if="!img" href="{{line.msg}}">{{line.name}}</a>';
             template.log = '<span class="log"><small>' + prefix + '<span bfl-translate>{{line.msg}}</span></small></span>';
 
             return {
