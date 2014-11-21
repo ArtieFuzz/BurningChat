@@ -4,7 +4,7 @@ var colors = [
 
 var app = angular.module('app', ['firebase', 'ngCookies', 'luegg.directives', 'ngImgur', 'burningForeignLanguage', 'burningChatRenderer']);
 
-app.value('firebaseRef', new Firebase('https://citizenchat.firebaseio.com'));
+app.value('firebaseRef', new Firebase('https://burningchat.firebaseio.com'));
 
 app.value('bflConfig', {
     baseUrl : '/bfl/',
