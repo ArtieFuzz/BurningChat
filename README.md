@@ -1,3 +1,5 @@
+I started to write BurningChat2 from empty floor. It will be much better then old BurningChat. Please be close from it!
+
 BurningChat
 ===========
 
